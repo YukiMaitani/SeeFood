@@ -38,10 +38,16 @@ class ViewController: UIViewController,UINavigationControllerDelegate, UIImagePi
         }
         
         let request = VNCoreMLRequest(model: model) { request, error in
-            guard let results = request.results else {
+            guard let results = request.results as? [VNClassificationObservation] else {
                 fatalError("リクエストが失敗しました")
             }
-            print(results)
+            if let firstResult = results.first {
+                if firstResult.identifier.contains("hotdog") {
+                    self.navigationItem.title = "Hotodog!"
+                } else {
+                    self.navigationItem.title = "Not Hotdog!"
+                }
+            }
         }
         
         let handler = VNImageRequestHandler(ciImage: ciimage)
